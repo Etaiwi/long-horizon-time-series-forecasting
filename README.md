@@ -65,6 +65,24 @@ Python modules and scripts will be the reproducible source of truth. Notebooks
 will call those modules for exploration, explanation, and visualization rather
 than duplicate training logic.
 
+## First dataset exploration
+
+From the repository root, download and validate ETTh1:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\download_etth1.py
+```
+
+Then start JupyterLab:
+
+```powershell
+.\.venv\Scripts\python.exe -m jupyter lab
+```
+
+Open `notebooks/01_etth1_eda.ipynb`, select the `.venv` Python kernel, and run
+all cells. The notebook introduces the variables, data quality, benchmark
+partitions, distributions, correlations, seasonality, and forecasting windows.
+
 ## Project instructions
 
 The current assignment brief is available at
