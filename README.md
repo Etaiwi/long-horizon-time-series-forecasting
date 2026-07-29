@@ -1,4 +1,4 @@
-# Time-Series Analysis Final Project
+# Long-Horizon Time-Series Forecasting: DLinear vs. PatchTST
 
 This repository contains a reproducible reconstruction and improvement study for
 long-horizon multivariate time-series forecasting.
