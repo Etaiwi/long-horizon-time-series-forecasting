@@ -112,7 +112,7 @@ kernel, and use **Run All** or run one section at a time.
 - explanatory ETTh1 EDA: complete
 - naive baselines and shared metrics: complete
 - DLinear reconstruction: 96-hour experiment complete
-- PatchTST reconstruction: official configuration audited
+- PatchTST reconstruction: official core implemented and equivalence-tested
 - selected improvement: planned
 
 ## Assignment instructions
