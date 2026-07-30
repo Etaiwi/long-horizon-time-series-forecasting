@@ -111,7 +111,7 @@ kernel, and use **Run All** or run one section at a time.
 - forecasting-window construction: complete
 - explanatory ETTh1 EDA: complete
 - naive baselines and shared metrics: complete
-- DLinear reconstruction: next
+- DLinear reconstruction: 96-hour experiment complete
 - PatchTST reconstruction: planned
 - selected improvement: planned
 
