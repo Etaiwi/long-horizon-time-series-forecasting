@@ -1,89 +1,121 @@
 # Long-Horizon Time-Series Forecasting: DLinear vs. PatchTST
 
-This repository contains a reproducible reconstruction and improvement study for
+This repository is a notebook-centered reconstruction and improvement study for
 long-horizon multivariate time-series forecasting.
 
-## Current status
-
-The project is in Part 1: paper reconstruction. Two candidate papers will be
-evaluated on the same data pipeline before the primary project is selected:
+Two candidate papers are being evaluated on the same ETTh1 benchmark:
 
 1. [Are Transformers Effective for Time Series Forecasting?](https://arxiv.org/abs/2205.13504)
-   - Candidate model: DLinear
-   - [Official implementation](https://github.com/cure-lab/LTSF-Linear)
+   — DLinear ([official code](https://github.com/cure-lab/LTSF-Linear))
 2. [A Time Series Is Worth 64 Words: Long-term Forecasting with Transformers](https://arxiv.org/abs/2211.14730)
-   - Candidate model: PatchTST
-   - [Official implementation](https://github.com/yuqinie98/PatchTST)
+   — PatchTST ([official code](https://github.com/yuqinie98/PatchTST))
 
-The reconstruction will begin with DLinear. PatchTST will reuse the verified
-dataset, splitting, scaling, windowing, metrics, and baseline code.
+We will reconstruct both candidates before selecting one paper and one
+meaningful improvement for the final submission.
+
+## Project approach
+
+The notebooks are the main learning and execution path. Each notebook is divided
+into numbered sections that explain:
+
+- what the step does;
+- why the step is necessary;
+- what the code calculates;
+- how to interpret the output;
+- how the result affects the next project decision.
+
+Small Python modules contain reusable logic that should not be copied between
+notebooks. For example, the notebooks will call the same tested data loader,
+forecasting metrics, baselines, model definitions, and training loop.
+
+## Repository structure
+
+```text
+configs/                  Small, readable experiment settings
+data/                     Downloaded datasets (not committed)
+docs/                     Assignment instructions and final documentation
+notebooks/                EDA, reconstructions, improvement, and comparison
+results/                  Compact generated metrics, tables, and figures
+scripts/                  Dataset download and other essential commands
+src/ts_project/
+├── data/                 ETTh1 validation, scaling, and forecasting windows
+├── models/               DLinear, PatchTST, and the selected improvement
+├── baselines.py          Simple forecasting baselines
+├── metrics.py            MSE, MAE, and RMSE
+└── training.py           Shared neural-network training loop
+tests/                    Focused correctness and leakage tests
+```
+
+Files listed above are added only when their corresponding project step is
+implemented. This keeps the repository compact and prevents placeholder code
+from becoming confusing.
+
+## Notebook plan
+
+| Notebook | Purpose |
+|---|---|
+| `01_etth1_eda.ipynb` | Understand and validate the dataset |
+| `02_dlinear_reconstruction.ipynb` | Explain, train, and evaluate DLinear |
+| `03_patchtst_reconstruction.ipynb` | Explain, train, and evaluate PatchTST |
+| `04_improved_method.ipynb` | Implement and test the selected improvement |
+| `05_final_comparison.ipynb` | Produce final tables and report figures |
+
+The final submission may retain all notebooks for transparency while identifying
+the selected reconstruction and improvement clearly in the README and report.
 
 ## Shared benchmark
 
-Both candidates will use the public
-[ETTh1 dataset](https://github.com/zhouhaoyi/ETDataset), an hourly multivariate
-electricity-transformer time series with seven numerical variables.
+Both models use the public
+[ETTh1 dataset](https://github.com/zhouhaoyi/ETDataset), an hourly,
+seven-variable electricity-transformer time series.
 
-The initial evaluation protocol will follow the papers:
+The planned evaluation protocol is:
 
-- chronological train/validation/test partitions;
+- chronological training, validation, and test partitions;
 - scaling fitted on training data only;
 - input window of 336 hourly observations;
 - forecast horizons of 96, 192, 336, and 720 hours;
-- MSE and MAE for comparison with published results;
+- MSE and MAE for comparison with the papers;
 - RMSE as an additional forecasting metric;
-- last-value and seasonal-naive baselines;
-- fixed random seeds and validation-based model selection.
+- last-value and daily seasonal-naive baselines;
+- validation-based model selection;
+- fixed seeds, followed by repeated-seed evaluation for the final comparison.
 
-## Reconstruction workflow
+## Setup
 
-For each candidate model, the project will distinguish between:
+Create and activate a virtual environment, then install the project:
 
-1. the result reported in the paper;
-2. a local run of the authors' official code;
-3. a concise reconstruction maintained in this repository.
-
-Results do not need to match the paper exactly. Differences will be measured and
-explained using the dataset version, preprocessing, software environment,
-hardware, random seed, and training configuration.
-
-## Planned repository layout
-
-```text
-configs/       Experiment configurations
-data/          Downloaded data (not committed)
-docs/          Project notes and references
-external/      Authors' repositories (not committed)
-notebooks/     Dataset exploration and result analysis
-results/       Reproducible tables and figures
-scripts/       Simple download and experiment commands
-src/           Data, model, training, and evaluation code
-tests/         Automated correctness checks
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-Python modules and scripts will be the reproducible source of truth for model
-training and evaluation. Notebooks will keep exploratory operations visible for
-explanation and visualization without duplicating model-training logic.
+The requirements install CUDA-enabled PyTorch and the `ipykernel` support needed
+to run notebooks directly in VS Code. JupyterLab is not required.
 
-## First dataset exploration
-
-From the repository root, download and validate ETTh1:
+Download and validate ETTh1:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\download_etth1.py
 ```
 
-Then start JupyterLab:
+Then open `notebooks/01_etth1_eda.ipynb` in VS Code, select the project `.venv`
+kernel, and use **Run All** or run one section at a time.
 
-```powershell
-.\.venv\Scripts\python.exe -m jupyter lab
-```
+## Current status
 
-Open `notebooks/01_etth1_eda.ipynb`, select the `.venv` Python kernel, and run
-all cells. The notebook introduces the variables, data quality, benchmark
-partitions, distributions, correlations, seasonality, and forecasting windows.
+- ETTh1 download and validation: complete
+- leakage-safe chronological partitions and scaling: complete
+- forecasting-window construction: complete
+- explanatory ETTh1 EDA: complete
+- naive baselines and shared metrics: next
+- DLinear reconstruction: planned
+- PatchTST reconstruction: planned
+- selected improvement: planned
 
-## Project instructions
+## Assignment instructions
 
-The current assignment brief is available at
+The assignment brief is available at
 [`docs/project_instructions.pdf`](docs/project_instructions.pdf).
