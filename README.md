@@ -61,9 +61,9 @@ src/           Data, model, training, and evaluation code
 tests/         Automated correctness checks
 ```
 
-Python modules and scripts will be the reproducible source of truth. Notebooks
-will call those modules for exploration, explanation, and visualization rather
-than duplicate training logic.
+Python modules and scripts will be the reproducible source of truth for model
+training and evaluation. Notebooks will keep exploratory operations visible for
+explanation and visualization without duplicating model-training logic.
 
 ## First dataset exploration
 
