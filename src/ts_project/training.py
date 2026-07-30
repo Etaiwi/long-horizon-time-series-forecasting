@@ -70,20 +70,24 @@ def train_forecaster(
     *,
     device: torch.device,
     learning_rate: float = 0.005,
+    learning_rate_schedule: str = "type1",
     max_epochs: int = 10,
     patience: int = 3,
+    verbose: bool = False,
 ) -> TrainingResult:
     """Train with Adam/MSE and restore the best validation checkpoint.
 
-    The learning rate follows the official DLinear ``type1`` schedule: it is
-    halved after every completed epoch. The test set is intentionally absent
-    from this function so it cannot influence model selection.
+    ``type1`` reproduces DLinear's halving schedule. ``type3`` reproduces the
+    slower PatchTST schedule. The test set is intentionally absent from this
+    function so it cannot influence model selection.
     """
 
     if learning_rate <= 0:
         raise ValueError("learning_rate must be positive.")
     if max_epochs <= 0 or patience <= 0:
         raise ValueError("max_epochs and patience must be positive.")
+    if learning_rate_schedule not in {"type1", "type3"}:
+        raise ValueError("learning_rate_schedule must be 'type1' or 'type3'.")
     if len(train_loader) == 0 or len(validation_loader) == 0:
         raise ValueError("Training and validation loaders must not be empty.")
 
@@ -131,6 +135,13 @@ def train_forecaster(
                 "validation_mse": validation_mse,
             }
         )
+        if verbose:
+            print(
+                f"Epoch {epoch:3d}/{max_epochs} | "
+                f"train MSE {train_mse:.6f} | "
+                f"validation MSE {validation_mse:.6f} | "
+                f"lr {current_learning_rate:.2e}"
+            )
 
         if validation_mse < best_validation_mse:
             best_validation_mse = validation_mse
@@ -142,7 +153,14 @@ def train_forecaster(
             if epochs_without_improvement >= patience:
                 break
 
-        next_learning_rate = learning_rate * (0.5**epoch)
+        if learning_rate_schedule == "type1":
+            next_learning_rate = learning_rate * (0.5 ** (epoch - 1))
+        else:
+            next_learning_rate = (
+                learning_rate
+                if epoch < 3
+                else learning_rate * (0.9 ** (epoch - 3))
+            )
         for parameter_group in optimizer.param_groups:
             parameter_group["lr"] = next_learning_rate
 

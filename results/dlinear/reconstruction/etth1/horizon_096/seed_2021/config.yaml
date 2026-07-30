@@ -15,7 +15,7 @@ training:
   optimizer: Adam
   objective: MSE
   learning_rate: 0.005
-  learning_rate_schedule: halve_after_each_epoch
+  learning_rate_schedule: type1
   batch_size: 32
   max_epochs: 10
   early_stopping_patience: 3
