@@ -110,8 +110,8 @@ kernel, and use **Run All** or run one section at a time.
 - leakage-safe chronological partitions and scaling: complete
 - forecasting-window construction: complete
 - explanatory ETTh1 EDA: complete
-- naive baselines and shared metrics: next
-- DLinear reconstruction: planned
+- naive baselines and shared metrics: complete
+- DLinear reconstruction: next
 - PatchTST reconstruction: planned
 - selected improvement: planned
 
