@@ -1,0 +1,63 @@
+experiment:
+  name: patchtst_reconstruction
+  seed: 2021
+  source_commit: 204c21efe0b39603ad6e2ca640ef5896646ab1a9
+data:
+  dataset: ETTh1
+  input_length: 336
+  prediction_length: 96
+  channels: 7
+  task: multivariate_to_multivariate
+patching:
+  patch_length: 16
+  stride: 8
+  padding: end
+  resulting_patch_count: 42
+model:
+  name: PatchTST
+  channel_independent: true
+  encoder_layers: 3
+  attention_heads: 4
+  model_dimension: 16
+  feedforward_dimension: 128
+  normalization: BatchNorm
+  activation: GELU
+  residual_attention: true
+  positional_encoding: zeros
+  learnable_positional_encoding: true
+  revin: true
+  revin_affine: false
+  subtract_last: false
+  decomposition: false
+  individual_head: false
+dropout:
+  encoder: 0.3
+  fully_connected: 0.3
+  attention: 0.0
+  head: 0.0
+training:
+  optimizer: Adam
+  objective: MSE
+  learning_rate: 0.0001
+  learning_rate_schedule: type3
+  batch_size: 128
+  max_epochs: 100
+  early_stopping_patience: 100
+evaluation:
+  metrics:
+  - MSE
+  - MAE
+  - RMSE
+  baselines:
+  - last_value
+  - seasonal_naive_24h
+  - dlinear_reconstruction
+  official_patchtst_42:
+    MSE: 0.375
+    MAE: 0.399
+notes:
+- The official ETTh1 shell script sets encoder and fully connected dropout to 0.3.
+- The paper appendix states encoder dropout 0.2; reconstruction follows the executable
+  official script.
+- The assignment-safe pipeline retains complete validation and test splits and does
+  not inspect test loss during training.
