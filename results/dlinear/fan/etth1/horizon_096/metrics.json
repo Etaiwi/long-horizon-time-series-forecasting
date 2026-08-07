@@ -1,0 +1,36 @@
+{
+  "selected_K": 8,
+  "selection_validation_MSE": {
+    "K4_mean": 0.745578,
+    "K4_std": 0.004403,
+    "K8_mean": 0.736238,
+    "K8_std": 0.009686,
+    "K12_mean": 0.738323,
+    "K12_std": 0.008878
+  },
+  "FAN-DLinear": {
+    "MSE_mean": 0.424488,
+    "MSE_std": 0.007979,
+    "MAE_mean": 0.436627,
+    "MAE_std": 0.003621
+  },
+  "Original_DLinear": {
+    "MSE_mean": 0.381133,
+    "MSE_std": 0.012862,
+    "MAE_mean": 0.405212,
+    "MAE_std": 0.015507
+  },
+  "improvement_percent": {
+    "MSE": -11.38,
+    "MAE": -7.75
+  },
+  "protocol": {
+    "dataset": "ETTh1",
+    "input_length": 336,
+    "prediction_length": 96,
+    "seeds": [2021, 2022, 2023],
+    "top_k_candidates": [4, 8, 12],
+    "prior_weight": 1.0,
+    "test_opened_after_selection": true
+  }
+}

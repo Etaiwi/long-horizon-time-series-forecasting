@@ -1,0 +1,38 @@
+experiment:
+  name: daily_adaptation_sequence
+  seeds: [2021, 2022, 2023]
+
+data:
+  dataset: ETTh1
+  input_length: 336
+  prediction_lengths: [96, 192, 336, 720]
+  sampling_frequency: hourly
+  channels: 7
+  task: multivariate_to_multivariate
+
+models:
+  moving_average: 25
+  daily_period: 24
+  adapter_rank: 1
+
+training:
+  optimizer: Adam
+  objective: MSE
+  learning_rate: 0.005
+  learning_rate_schedule: type1
+  batch_size: 32
+  max_epochs: 10
+  early_stopping_patience: 3
+
+selection:
+  development_horizon: 96
+  criterion: mean_validation_MSE_across_seeds
+  combine_only_if_both_ablation_means_beat_baseline: true
+  channel_mask_source: validation_per_seed
+
+evaluation:
+  metrics: [MSE, MAE]
+  paired_baseline: DLinear
+  paper_reported_etth1_h096:
+    MSE: 0.375
+    MAE: 0.399

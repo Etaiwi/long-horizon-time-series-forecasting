@@ -113,7 +113,23 @@ kernel, and use **Run All** or run one section at a time.
 - naive baselines and shared metrics: complete
 - DLinear reconstruction: 96-hour experiment complete
 - PatchTST reconstruction: 96-hour experiment complete
-- selected improvement: planned
+- RevIN-DLinear and slice-aware DLinear: evaluated for ETTh1 336-to-96
+- daily/weekly period-aware DLinear: implemented and evaluated for ETTh1 336-to-96
+- validation-selected feature-adaptive DLinear: evaluated across three seeds and horizons 96-720
+
+The period-aware experiment is reproduced with:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_multiseasonal_dlinear.py
+```
+
+See [`docs/multiseasonal_dlinear_experiment.md`](docs/multiseasonal_dlinear_experiment.md)
+for the architecture, protocol, overall metrics, and per-feature results.
+
+The final staged improvement experiment is in
+[`notebooks/05_daily_adaptive_dlinear.ipynb`](notebooks/05_daily_adaptive_dlinear.ipynb),
+with a teaching-oriented explanation in
+[`docs/daily_adaptive_dlinear_experiment.md`](docs/daily_adaptive_dlinear_experiment.md).
 
 ## Assignment instructions
 

@@ -1,0 +1,33 @@
+experiment:
+  name: period_aware_multiseasonal_dlinear
+  seed: 2021
+
+data:
+  dataset: ETTh1
+  input_length: 336
+  prediction_length: 96
+  sampling_frequency: hourly
+  channels: 7
+  task: multivariate_to_multivariate
+
+model:
+  name: PeriodAwareDLinear
+  moving_average: 25
+  daily_period: 24
+  weekly_period: 168
+  individual: false
+
+training:
+  optimizer: Adam
+  objective: MSE
+  learning_rate: 0.005
+  learning_rate_schedule: type1
+  batch_size: 32
+  max_epochs: 10
+  early_stopping_patience: 3
+
+evaluation:
+  metrics:
+    - MSE
+    - MAE
+  paired_baseline: DLinear
