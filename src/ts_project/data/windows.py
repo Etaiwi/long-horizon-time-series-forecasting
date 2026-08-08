@@ -2,13 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
-
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-
-from ts_project.data.etth1 import ETTh1Data, SPLIT_BOUNDS
 
 
 class ForecastWindowDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
@@ -55,24 +51,3 @@ class ForecastWindowDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         inputs = self.values[origin - self.input_length : origin]
         targets = self.values[origin : origin + self.prediction_length]
         return inputs, targets
-
-
-def build_window_datasets(
-    data: ETTh1Data,
-    *,
-    input_length: int = 336,
-    prediction_length: int = 96,
-) -> Mapping[str, ForecastWindowDataset]:
-    """Build train, validation, and test windows from one scaled series."""
-
-    values = data.scaled.to_numpy(copy=False)
-    return {
-        name: ForecastWindowDataset(
-            values,
-            target_start=start,
-            target_end=end,
-            input_length=input_length,
-            prediction_length=prediction_length,
-        )
-        for name, (start, end) in SPLIT_BOUNDS.items()
-    }

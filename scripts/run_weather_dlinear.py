@@ -119,7 +119,6 @@ def main() -> None:
         loaders["validation"],
         device=device,
         learning_rate=1e-4,
-        learning_rate_schedule="type1",
         max_epochs=10,
         patience=3,
         verbose=True,

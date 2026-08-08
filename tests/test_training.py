@@ -60,28 +60,3 @@ def test_seed_everything_repeats_torch_random_values() -> None:
     second = torch.rand(4)
 
     torch.testing.assert_close(first, second)
-
-
-def test_patchtst_type3_schedule_stays_constant_before_decay() -> None:
-    seed_everything(2021)
-    model = nn.Sequential(nn.Flatten(), nn.Linear(4, 2), nn.Unflatten(1, (2, 1)))
-    loader = _loader()
-
-    result = train_forecaster(
-        model,
-        loader,
-        loader,
-        device=torch.device("cpu"),
-        learning_rate=0.0001,
-        learning_rate_schedule="type3",
-        max_epochs=5,
-        patience=5,
-    )
-
-    assert [row["learning_rate"] for row in result.history] == [
-        0.0001,
-        0.0001,
-        0.0001,
-        0.0001,
-        0.00009,
-    ]
