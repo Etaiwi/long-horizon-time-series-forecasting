@@ -1,0 +1,7 @@
+seed,model,val_mse,val_mae,best_epoch,parameters
+2021,V1 static multiscale,0.400249,0.294227,8,64767
+2021,V2A dynamic multiscale,0.390399,0.289043,6,64834
+2022,V1 static multiscale,0.399301,0.294250,5,64767
+2022,V2A dynamic multiscale,0.388505,0.289105,5,64834
+2023,V1 static multiscale,0.399240,0.293738,9,64767
+2023,V2A dynamic multiscale,0.388321,0.288296,9,64834

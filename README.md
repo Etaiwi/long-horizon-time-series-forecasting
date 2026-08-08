@@ -1,89 +1,62 @@
-# Long-Horizon Time-Series Forecasting: DLinear vs. PatchTST
+# Adaptive Multiscale DLinear for Weather Forecasting
 
-This repository is a notebook-centered reconstruction and improvement study for
-long-horizon multivariate time-series forecasting.
+This repository reconstructs **DLinear** from *Are Transformers Effective for
+Time Series Forecasting?* and evaluates one lightweight improvement on the
+public Weather benchmark.
 
-Two candidate papers are being evaluated on the same ETTh1 benchmark:
+The selected method is **Dynamic Per-Variable Multiscale DLinear**. Original
+DLinear uses one fixed moving-average kernel for every variable and forecasting
+window. The improved model combines three trend scales and lets their weights
+depend on both the variable and the current input window.
 
-1. [Are Transformers Effective for Time Series Forecasting?](https://arxiv.org/abs/2205.13504)
-   — DLinear ([official code](https://github.com/cure-lab/LTSF-Linear))
-2. [A Time Series Is Worth 64 Words: Long-term Forecasting with Transformers](https://arxiv.org/abs/2211.14730)
-   — PatchTST ([official code](https://github.com/yuqinie98/PatchTST))
+## Final forecasting task
 
-We will reconstruct both candidates before selecting one paper and one
-meaningful improvement for the final submission.
+- dataset: Weather, 52,696 ten-minute observations and 21 variables;
+- task: multivariate-to-multivariate forecasting;
+- input length: 336 observations (56 hours);
+- prediction length: 96 observations (16 hours);
+- split: chronological 70% train, 10% validation, 20% test;
+- preprocessing: `StandardScaler` fitted only on training observations;
+- metrics: standardized-space MSE and MAE;
+- baseline: daily seasonal naive with period 144;
+- seeds: 2021, 2022, and 2023.
 
-## Project approach
+## Main result
 
-The notebooks are the main learning and execution path. Each notebook is divided
-into numbered sections that explain:
+The architecture was selected using validation data. After it was frozen, the
+saved checkpoints were evaluated on the test partition.
 
-- what the step does;
-- why the step is necessary;
-- what the code calculates;
-- how to interpret the output;
-- how the result affects the next project decision.
+| Model | Parameters | Test MSE (mean ± SD) | Test MAE (mean ± SD) |
+|---|---:|---:|---:|
+| DLinear reconstruction | 64,704 | 0.17464 ± 0.00052 | 0.23486 ± 0.00174 |
+| Static per-variable multiscale (V1) | 64,767 | 0.16739 ± 0.00044 | 0.22910 ± 0.00114 |
+| **Dynamic per-variable multiscale (V2A)** | **64,834** | **0.16540 ± 0.00045** | **0.22492 ± 0.00137** |
 
-Small Python modules contain reusable logic that should not be copied between
-notebooks. For example, the notebooks will call the same tested data loader,
-forecasting metrics, baselines, model definitions, and training loop.
+V2A improves over the paired DLinear reconstruction for all three seeds. Its
+mean relative reduction is approximately **5.29% MSE** and **4.23% MAE**, while
+adding only 130 parameters (about 0.20%). The paper reports DLinear test results
+of MSE 0.176 and MAE 0.237 for the same Weather 336-to-96 task.
 
-## Repository structure
+## Final project path
+
+The concise final workflow is:
 
 ```text
-configs/                  Small, readable experiment settings
-data/                     Downloaded datasets (not committed)
-docs/                     Assignment instructions and final documentation
-notebooks/                EDA, reconstructions, improvement, and comparison
-results/                  Compact generated metrics, tables, and figures
-scripts/                  Dataset download and other essential commands
-src/ts_project/
-├── data/                 ETTh1 validation, scaling, and forecasting windows
-├── models/               DLinear, PatchTST, and the selected improvement
-├── baselines.py          Simple forecasting baselines
-├── metrics.py            MSE, MAE, and RMSE
-└── training.py           Shared neural-network training loop
-tests/                    Focused correctness and leakage tests
+configs/final_weather_dlinear.yaml
+docs/final_method.md
+notebooks/final/01_dlinear_reconstruction.ipynb
+notebooks/final/02_dynamic_multiscale_improvement.ipynb
+results/dlinear/weather/horizon_096/
+scripts/run_weather_dlinear.py
+src/ts_project/data/weather.py
+src/ts_project/models/adaptive_dlinear.py
 ```
 
-Files listed above are added only when their corresponding project step is
-implemented. This keeps the repository compact and prevents placeholder code
-from becoming confusing.
+The original ETTh1 DLinear/PatchTST reconstructions and exploratory improvement
+notebooks remain in the repository as development evidence. They are no longer
+the final-project path.
 
-## Notebook plan
-
-| Notebook | Purpose |
-|---|---|
-| `01_etth1_eda.ipynb` | Understand and validate the dataset |
-| `02_dlinear_reconstruction.ipynb` | Explain, train, and evaluate DLinear |
-| `03_patchtst_reconstruction.ipynb` | Explain, train, and evaluate PatchTST |
-| `04_improved_method.ipynb` | Implement and test the selected improvement |
-| `05_final_comparison.ipynb` | Produce final tables and report figures |
-
-The final submission may retain all notebooks for transparency while identifying
-the selected reconstruction and improvement clearly in the README and report.
-
-## Shared benchmark
-
-Both models use the public
-[ETTh1 dataset](https://github.com/zhouhaoyi/ETDataset), an hourly,
-seven-variable electricity-transformer time series.
-
-The planned evaluation protocol is:
-
-- chronological training, validation, and test partitions;
-- scaling fitted on training data only;
-- input window of 336 hourly observations;
-- forecast horizons of 96, 192, 336, and 720 hours;
-- MSE and MAE for comparison with the papers;
-- RMSE as an additional forecasting metric;
-- last-value and daily seasonal-naive baselines;
-- validation-based model selection;
-- fixed seeds, followed by repeated-seed evaluation for the final comparison.
-
-## Setup
-
-Create and activate a virtual environment, then install the project:
+## Environment
 
 ```powershell
 py -3.12 -m venv .venv
@@ -92,46 +65,29 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-The requirements install CUDA-enabled PyTorch and the `ipykernel` support needed
-to run notebooks directly in VS Code. JupyterLab is not required.
+The requirements use CUDA-enabled PyTorch and include `ipykernel`, so the
+notebooks can be opened directly in VS Code without installing JupyterLab.
 
-Download and validate ETTh1:
+Place the Weather file at:
 
-```powershell
-.\.venv\Scripts\python.exe scripts\download_etth1.py
+```text
+data/raw/weather.csv
 ```
 
-Then open `notebooks/01_etth1_eda.ipynb` in VS Code, select the project `.venv`
-kernel, and use **Run All** or run one section at a time.
-
-## Current status
-
-- ETTh1 download and validation: complete
-- leakage-safe chronological partitions and scaling: complete
-- forecasting-window construction: complete
-- explanatory ETTh1 EDA: complete
-- naive baselines and shared metrics: complete
-- DLinear reconstruction: 96-hour experiment complete
-- PatchTST reconstruction: 96-hour experiment complete
-- RevIN-DLinear and slice-aware DLinear: evaluated for ETTh1 336-to-96
-- daily/weekly period-aware DLinear: implemented and evaluated for ETTh1 336-to-96
-- validation-selected feature-adaptive DLinear: evaluated across three seeds and horizons 96-720
-
-The period-aware experiment is reproduced with:
+Run the focused tests:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_multiseasonal_dlinear.py
+.\.venv\Scripts\python.exe -m pytest tests/test_weather_data.py tests/test_adaptive_dlinear.py
 ```
 
-See [`docs/multiseasonal_dlinear_experiment.md`](docs/multiseasonal_dlinear_experiment.md)
-for the architecture, protocol, overall metrics, and per-feature results.
+Run a reconstruction or improvement experiment:
 
-The final staged improvement experiment is in
-[`notebooks/05_daily_adaptive_dlinear.ipynb`](notebooks/05_daily_adaptive_dlinear.ipynb),
-with a teaching-oriented explanation in
-[`docs/daily_adaptive_dlinear_experiment.md`](docs/daily_adaptive_dlinear_experiment.md).
+```powershell
+.\.venv\Scripts\python.exe scripts/run_weather_dlinear.py --model dlinear --seed 2021 --evaluate-test
+.\.venv\Scripts\python.exe scripts/run_weather_dlinear.py --model v2a --seed 2021 --evaluate-test
+```
 
-## Assignment instructions
+## Assignment material
 
-The assignment brief is available at
+The assignment instructions remain available at
 [`docs/project_instructions.pdf`](docs/project_instructions.pdf).

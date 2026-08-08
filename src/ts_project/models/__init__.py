@@ -1,5 +1,10 @@
 """Forecasting model definitions used by the reconstruction notebooks."""
 
+from ts_project.models.adaptive_dlinear import (
+    DynamicPerVariableMultiScaleDLinear,
+    PerVariableMultiScaleDLinear,
+    initialize_projections_from_dlinear,
+)
 from ts_project.models.dlinear import DLinear, MovingAverage, SeriesDecomposition
 from ts_project.models.fan_dlinear import (
     FANDLinear,
@@ -22,6 +27,7 @@ from ts_project.models.slice_aware import (
 )
 
 __all__ = [
+    "DynamicPerVariableMultiScaleDLinear",
     "DLinear",
     "FANDLinear",
     "FrequencyPredictor",
@@ -33,10 +39,12 @@ __all__ = [
     "LowRankDLinear",
     "MultiSeasonalDecomposition",
     "PatchTST",
+    "PerVariableMultiScaleDLinear",
     "PeriodAwareDLinear",
     "RevINDLinear",
     "SeriesDecomposition",
     "SliceAwareDLinear",
     "slice_statistics_loss",
     "dominant_frequency_component",
+    "initialize_projections_from_dlinear",
 ]

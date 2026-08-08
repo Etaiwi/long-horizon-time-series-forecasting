@@ -1,0 +1,23 @@
+{
+  "selected_method": "V2A dynamic per-variable multiscale DLinear",
+  "selection_metric": "validation MSE",
+  "selection_seeds": [2021, 2022, 2023],
+  "test_evaluated_after_configuration_frozen": true,
+  "test_mean": {
+    "mse": 0.1654026795861364,
+    "mae": 0.22492182753897227
+  },
+  "paired_improvement_vs_dlinear_percent": {
+    "mse_mean": 5.287950279150145,
+    "mae_mean": 4.232424621395071,
+    "wins_mse": "3/3",
+    "wins_mae": "3/3"
+  },
+  "parameters": {
+    "dlinear": 64704,
+    "v1": 64767,
+    "v2a": 64834,
+    "v2a_increase_vs_dlinear": 130,
+    "v2a_increase_percent": 0.200915
+  }
+}

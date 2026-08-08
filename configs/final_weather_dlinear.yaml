@@ -1,0 +1,40 @@
+experiment:
+  name: dynamic_multiscale_dlinear_weather_h096
+  paper: Are Transformers Effective for Time Series Forecasting?
+
+data:
+  dataset: weather
+  path: data/raw/weather.csv
+  sampling_minutes: 10
+  channels: 21
+  split: [0.70, 0.10, 0.20]
+  input_length: 336
+  prediction_length: 96
+  scaler: standard
+  scaler_fit: train_only
+
+model:
+  reconstruction: dlinear
+  selected_improvement: dynamic_per_variable_multiscale_dlinear
+  original_kernel: 25
+  kernels: [25, 73, 145]
+  gate_features: [window_mean, window_std, last_value, last_minus_first]
+  gate_hidden_dimension: 8
+  individual: false
+
+training:
+  seeds: [2021, 2022, 2023]
+  optimizer: adam
+  objective: mse
+  learning_rate: 0.0001
+  learning_rate_schedule: type1
+  batch_size: 16
+  maximum_epochs: 10
+  early_stopping_patience: 3
+  checkpoint_metric: validation_mse
+
+evaluation:
+  paper_metrics: [mse, mae]
+  baseline: daily_seasonal_naive
+  baseline_period: 144
+  final_test_policy: configuration_frozen_before_test_evaluation

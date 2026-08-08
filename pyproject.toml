@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "time-series-reconstruction"
 version = "0.1.0"
-description = "Reproducible DLinear and PatchTST reconstruction study on ETTh1"
+description = "DLinear reconstruction and adaptive multiscale improvement on Weather"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = [
