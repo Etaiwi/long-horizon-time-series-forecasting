@@ -10,9 +10,9 @@ decomposition on the public Weather dataset.
 |---|---|
 | `notebooks/01_dlinear_reconstruction.ipynb` | Stage 1: data, baseline, DLinear training, and paper comparison |
 | `notebooks/02_dynamic_multiscale_improvement.ipynb` | Stage 2: improved architecture, selection, and final results |
-| `notebooks/03_results_and_figures.ipynb` | Optional report tables and figures |
+| `notebooks/03_multihorizon_evaluation.ipynb` | Generalization across horizons 96, 192, 336, and 720 |
+| `notebooks/04_results_and_figures.ipynb` | Optional report tables and figures |
 | `src/ts_project/` | Tested data pipeline, models, metrics, baselines, and training code |
-| `scripts/run_weather_dlinear.py` | Reproduce a model run from the command line |
 | `results/dlinear/weather/horizon_096/` | Final validation and test tables |
 | `docs/final_method.md` | Mathematical description and experimental protocol |
 | `report/` | Final report workspace |
@@ -74,19 +74,10 @@ The dataset link, expected dimensions, and checksum are in `data/README.md`.
 
 ## Run
 
-Open the two main notebooks in numerical order and select the project `.venv`
-kernel. Notebook 1 takes about one to two minutes on the project GPU. Notebook 2
-loads the frozen repeated-seed results and explains the improvement.
-
-The exact command-line reproduction is:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\run_weather_dlinear.py --model dlinear --seed 2021 --evaluate-test
-.\.venv\Scripts\python.exe scripts\run_weather_dlinear.py --model v2a --seed 2021 --evaluate-test
-```
-
-Repeat with seeds 2022 and 2023 for the complete comparison. Expected seed-2021
-V2A output is approximately MSE `0.164952` and MAE `0.223527`.
+Open the notebooks in numerical order and select the project `.venv` kernel.
+Notebook 1 reconstructs DLinear, notebook 2 explains the selected improvement,
+and notebook 3 runs the optional repeated-seed multi-horizon experiment. All
+project experiments can be run directly from the notebooks.
 
 Run tests with:
 
