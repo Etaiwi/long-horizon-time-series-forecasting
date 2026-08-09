@@ -4,7 +4,7 @@
 **Students:** [add names and student numbers]<br>
 **Selected paper:** *Are Transformers Effective for Time Series Forecasting?* (Zeng et al., 2023)
 
-This document is the working source for the final PDF. The multi-horizon subsection is intentionally left open until Notebook 3 finishes.
+This document is the working source for the final PDF.
 
 ## 1. Original architecture
 
@@ -160,19 +160,30 @@ Relative to paired DLinear runs, V1 reduces mean MSE by approximately 4.15% and 
 
 ### 5.2 Multi-horizon evaluation
 
-**Pending Notebook 3 results.** Insert the results for horizons 96, 192, 336, and 720 here, using the same three seeds and reporting mean ± standard deviation. This section will answer whether the improvement remains useful as the forecast horizon grows.
+To test whether the improvement is limited to the main 96-step experiment, we repeat the paired three-seed comparison at the four forecast horizons used in the paper. The input length remains 336 observations. At ten-minute sampling, horizons 96, 192, 336, and 720 correspond to 16, 32, 56, and 120 hours.
+
+| Horizon | DLinear MSE | V2A MSE | MSE reduction | DLinear MAE | V2A MAE | MAE reduction |
+|---:|---:|---:|---:|---:|---:|---:|
+| 96 | 0.17464 ± 0.00052 | **0.16540 ± 0.00045** | **5.29%** | 0.23486 ± 0.00174 | **0.22492 ± 0.00137** | **4.23%** |
+| 192 | 0.21570 ± 0.00029 | **0.20875 ± 0.00072** | **3.22%** | 0.27270 ± 0.00082 | **0.26537 ± 0.00175** | **2.69%** |
+| 336 | 0.26297 ± 0.00142 | **0.25730 ± 0.00214** | **2.16%** | 0.31445 ± 0.00313 | **0.30870 ± 0.00422** | **1.83%** |
+| 720 | 0.32444 ± 0.00069 | **0.31983 ± 0.00109** | **1.42%** | 0.36299 ± 0.00125 | **0.35737 ± 0.00151** | **1.55%** |
+
+V2A obtains lower MSE and MAE than its paired DLinear run for all three seeds at all four horizons. Its largest relative gain occurs at horizon 96. The gain becomes smaller as the forecast horizon increases but remains consistent at horizon 720. This suggests that the adaptive decomposition is most useful for the shorter forecast while still generalizing across all tested horizons.
 
 ## 6. Discussion
 
 The ablation gives a clear progression. V1 shows that one decomposition scale is not equally suitable for all Weather variables. V2A improves further, suggesting that the preferred scale also changes with the current window. Because V2A retains DLinear's forecasting path and changes only the decomposition, the source of the improvement is easy to isolate.
 
-The result is also computationally lightweight. V2A adds 130 parameters to a 64,704-parameter baseline, while producing lower MSE and MAE for all three paired seeds at horizon 96.
+The result is parameter-efficient. V2A adds 130 parameters to a 64,704-parameter baseline, while producing lower MSE and MAE for all three paired seeds at horizon 96. However, computing three moving averages increases training time, so the small parameter overhead should not be confused with zero computational cost. Total runtime also depends on the epoch selected by early stopping and is therefore not a controlled speed benchmark.
+
+The multi-horizon experiment strengthens this result: V2A wins on both metrics in all 12 paired comparisons. However, the decreasing relative gain suggests that decomposition-scale adaptation has less influence as forecast uncertainty grows over longer horizons.
 
 The main limitations are that the current evidence uses one dataset and three seeds, and the final architecture was chosen using the validation set. The multi-horizon evaluation provides an additional test of robustness, but it does not replace evaluation on an independent dataset. We therefore claim an improvement for this forecasting task rather than a universal replacement for DLinear.
 
 ## 7. Conclusion
 
-We reconstructed DLinear closely on the Weather benchmark and introduced a dynamic multiscale decomposition. The proposed V2A method lets each variable and input window choose a convex mixture of short-, medium-, and daily-scale trends. At the 96-step horizon, it improves both MSE and MAE for all three paired seeds with only 0.201% more parameters. [Add one sentence summarizing the multi-horizon result after Notebook 3 finishes.]
+We reconstructed DLinear closely on the Weather benchmark and introduced a dynamic multiscale decomposition. The proposed V2A method lets each variable and input window choose a convex mixture of short-, medium-, and daily-scale trends. At the 96-step horizon, it improves both MSE and MAE for all three paired seeds with only 0.201% more parameters. It also outperforms DLinear for every seed at horizons 192, 336, and 720, although the relative improvement decreases for longer forecasts.
 
 ## 8. References
 

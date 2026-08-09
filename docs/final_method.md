@@ -94,6 +94,12 @@ V2A beats paired DLinear on both metrics for all three seeds. Mean paired
 relative improvements are 5.29% MSE and 4.23% MAE. For seed 2021, V2A obtains
 MSE 0.16495 and MAE 0.22353; the paper reports DLinear MSE 0.176 and MAE 0.237.
 
+Across horizons 96, 192, 336, and 720, V2A beats its paired DLinear run on both
+metrics for every seed. Its mean paired MSE reductions are 5.29%, 3.22%, 2.16%,
+and 1.42%; its corresponding MAE reductions are 4.23%, 2.69%, 1.83%, and 1.55%.
+The improvement therefore remains consistent while becoming smaller at longer
+forecast horizons.
+
 ## Interpretation and limitations
 
 The progression from one global scale, to variable-specific scales, to
