@@ -36,10 +36,10 @@ Earlier ETTh1, PatchTST, and rejected improvement experiments are preserved in
 | Model | Parameters | Test MSE (mean ± SD) | Test MAE (mean ± SD) |
 |---|---:|---:|---:|
 | DLinear reconstruction | 64,704 | 0.17464 ± 0.00052 | 0.23486 ± 0.00174 |
-| Static multiscale V1 | 64,767 | 0.16739 ± 0.00044 | 0.22910 ± 0.00114 |
-| **Dynamic multiscale V2A** | **64,834** | **0.16540 ± 0.00045** | **0.22492 ± 0.00137** |
+| Static per-variable multiscale DLinear | 64,767 | 0.16739 ± 0.00044 | 0.22910 ± 0.00114 |
+| **Dynamic per-variable multiscale DLinear** | **64,834** | **0.16540 ± 0.00045** | **0.22492 ± 0.00137** |
 
-V2A reduces paired test MSE by approximately 5.29% and MAE by 4.23%, with
+The dynamic model reduces paired test MSE by approximately 5.29% and MAE by 4.23%, with
 only 130 additional parameters.
 
 ## Setup
@@ -75,7 +75,7 @@ The dataset link, expected dimensions, and checksum are in `data/README.md`.
 ## Run
 
 Open the notebooks in numerical order and select the project `.venv` kernel.
-Notebook 1 trains DLinear with three seeds, notebook 2 trains V1 and V2A with
+Notebook 1 trains DLinear with three seeds, notebook 2 trains the static and dynamic multiscale models with
 the same paired seeds, and notebook 3 runs the optional repeated-seed
 multi-horizon experiment. On the project GPU, notebooks 1 and 2 take roughly
 5 and 13 minutes, respectively. All project experiments run directly from the

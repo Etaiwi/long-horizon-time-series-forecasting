@@ -21,6 +21,9 @@ htmlcov/
 /checkpoints/
 /outputs/
 
+# Editable report source kept local; only the final PDF is published
+/report/*.docx
+
 # Temporary and operating-system files
 /tmp/
 .DS_Store

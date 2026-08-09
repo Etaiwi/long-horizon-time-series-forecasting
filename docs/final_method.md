@@ -24,9 +24,9 @@ The implementation preserves the official repeated-endpoint padding,
 `individual=False` shared temporal projections, MSE training objective, Adam
 optimizer, chronological Weather split, and train-only scaling.
 
-## V1 ablation: static per-variable scales
+## Static per-variable multiscale DLinear
 
-V1 computes three moving-average trends with kernels 25, 73, and 145. For
+The static multiscale model computes three moving-average trends with kernels 25, 73, and 145. For
 Weather's ten-minute observations these span approximately 4.2, 12.2, and 24.2
 hours. Every variable learns one fixed convex scale mixture:
 
@@ -39,7 +39,7 @@ T_{b,t,c}=\sum_m\alpha_{c,m}MA_{k_m}(X)_{b,t,c}.
 This isolates whether variables prefer different decomposition scales. It adds
 only \(21\times3=63\) parameters.
 
-## V2A: dynamic per-variable scales
+## Dynamic per-variable multiscale DLinear
 
 The final model makes the scale weights depend on the current window. For every
 window \(b\) and variable \(c\), it calculates four standardized summary
@@ -62,7 +62,7 @@ d_{b,c}=W_2\operatorname{GELU}(W_1f_{b,c}+b_1)+b_2,
 
 The adaptive trend and remainder are then forecast through the original two
 shared DLinear projections. The gate uses hidden dimension 8 and adds only 67
-parameters beyond V1, for 64,834 total parameters.
+parameters beyond the static model, for 64,834 total parameters.
 
 ## Experimental protocol
 
@@ -87,14 +87,14 @@ benchmark representation.
 | Model | Parameters | Test MSE (mean ± SD) | Test MAE (mean ± SD) |
 |---|---:|---:|---:|
 | DLinear | 64,704 | 0.17464 ± 0.00052 | 0.23486 ± 0.00174 |
-| V1 static multiscale | 64,767 | 0.16739 ± 0.00044 | 0.22910 ± 0.00114 |
-| **V2A dynamic multiscale** | **64,834** | **0.16540 ± 0.00045** | **0.22492 ± 0.00137** |
+| Static per-variable multiscale DLinear | 64,767 | 0.16739 ± 0.00044 | 0.22910 ± 0.00114 |
+| **Dynamic per-variable multiscale DLinear** | **64,834** | **0.16540 ± 0.00045** | **0.22492 ± 0.00137** |
 
-V2A beats paired DLinear on both metrics for all three seeds. Mean paired
-relative improvements are 5.29% MSE and 4.23% MAE. For seed 2021, V2A obtains
+The dynamic model beats paired DLinear on both metrics for all three seeds. Mean paired
+relative improvements are 5.29% MSE and 4.23% MAE. For seed 2021, the dynamic model obtains
 MSE 0.16495 and MAE 0.22353; the paper reports DLinear MSE 0.176 and MAE 0.237.
 
-Across horizons 96, 192, 336, and 720, V2A beats its paired DLinear run on both
+Across horizons 96, 192, 336, and 720, the dynamic model beats its paired DLinear run on both
 metrics for every seed. Its mean paired MSE reductions are 5.29%, 3.22%, 2.16%,
 and 1.42%; its corresponding MAE reductions are 4.23%, 2.69%, 1.83%, and 1.55%.
 The improvement therefore remains consistent while becoming smaller at longer
@@ -108,6 +108,6 @@ current evidence uses one dataset and three seeds, so the project claims an
 improvement for this forecasting task rather than a universal improvement on
 every time-series dataset.
 
-The final architecture was selected using the Weather validation set. V2A was
+The final architecture was selected using the Weather validation set. The dynamic model was
 frozen using validation results before its checkpoints were evaluated on test;
 this distinction is stated in the final report.
