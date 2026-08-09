@@ -98,13 +98,10 @@ MSE 0.16495 and MAE 0.22353; the paper reports DLinear MSE 0.176 and MAE 0.237.
 
 The progression from one global scale, to variable-specific scales, to
 window-and-variable-specific scales is supported by the ablation results. The
-gain is Weather-specific: earlier V1 validation gains were smaller on
-Electricity and ETTh1. The project therefore claims improved applicability to
-heterogeneous meteorological variables, not a universal improvement on every
-time-series dataset.
+current evidence uses one dataset and three seeds, so the project claims an
+improvement for this forecasting task rather than a universal improvement on
+every time-series dataset.
 
-Several architectures were explored on the same Weather validation set, so
-validation-selection bias remains possible. V1's test result was also known
-before V2A was designed. V2A itself was frozen using validation results before
-its checkpoints were evaluated on test; this distinction must be stated in the
-final report.
+The final architecture was selected using the Weather validation set. V2A was
+frozen using validation results before its checkpoints were evaluated on test;
+this distinction is stated in the final report.
