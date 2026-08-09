@@ -75,9 +75,11 @@ The dataset link, expected dimensions, and checksum are in `data/README.md`.
 ## Run
 
 Open the notebooks in numerical order and select the project `.venv` kernel.
-Notebook 1 reconstructs DLinear, notebook 2 explains the selected improvement,
-and notebook 3 runs the optional repeated-seed multi-horizon experiment. All
-project experiments can be run directly from the notebooks.
+Notebook 1 trains DLinear with three seeds, notebook 2 trains V1 and V2A with
+the same paired seeds, and notebook 3 runs the optional repeated-seed
+multi-horizon experiment. On the project GPU, notebooks 1 and 2 take roughly
+5 and 13 minutes, respectively. All project experiments run directly from the
+notebooks.
 
 Run tests with:
 
