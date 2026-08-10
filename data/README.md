@@ -22,6 +22,3 @@ instructions: <https://github.com/cure-lab/LTSF-Linear#datasets>.
 The complete benchmark dataset collection used by the paper can be downloaded
 from the authors' Google Drive folder:
 <https://drive.google.com/drive/folders/1ZOYpTUa82_jCcxIdTmyr0LXQfvaM9vIy>.
-
-ETTh1 remains available locally for the earlier reconstruction and exploratory
-experiments, but Weather is the selected final-project dataset.

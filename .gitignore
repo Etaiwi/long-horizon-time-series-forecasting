@@ -21,8 +21,14 @@ htmlcov/
 /checkpoints/
 /outputs/
 
-# Editable report source kept local; only the final PDF is published
-/report/*.docx
+# Private submission artifacts and local project history
+/report/
+/submission/
+/archive/
+/configs/
+/docs/
+/scripts/
+/tests/
 
 # Temporary and operating-system files
 /tmp/

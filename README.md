@@ -1,35 +1,34 @@
 # Dynamic Multiscale DLinear for Weather Forecasting
 
-Final project for the Time-Series Analysis course. We reconstruct DLinear from
-*Are Transformers Effective for Time Series Forecasting?* and improve its trend
-decomposition on the public Weather dataset.
+Time-Series Analysis final project by Etai Wigman and Guy Inbar. We reconstruct
+DLinear from *Are Transformers Effective for Time Series Forecasting?* and
+replace its fixed trend scale with a lightweight, input-dependent mixture of
+three moving-average scales.
 
-## Main files
+[Read the public final report](final_report.pdf).
 
-| File | Purpose |
+## Project files
+
+| Path | Purpose |
 |---|---|
-| `notebooks/01_dlinear_reconstruction.ipynb` | Stage 1: data, baseline, DLinear training, and paper comparison |
-| `notebooks/02_dynamic_multiscale_improvement.ipynb` | Stage 2: improved architecture, selection, and final results |
-| `notebooks/03_multihorizon_evaluation.ipynb` | Generalization across horizons 96, 192, 336, and 720 |
-| `notebooks/04_results_and_figures.ipynb` | Optional report tables and figures |
-| `src/ts_project/` | Tested data pipeline, models, metrics, baselines, and training code |
-| `results/dlinear/weather/horizon_096/` | Final validation and test tables |
-| `docs/final_method.md` | Mathematical description and experimental protocol |
-| `report/` | Final report workspace |
-
-Earlier ETTh1, PatchTST, and rejected improvement experiments are preserved in
-`archive/etth1_patchtst/`. They are not part of the final execution path.
+| `notebooks/01_dlinear_reconstruction.ipynb` | Data pipeline, seasonal-naive baseline, DLinear training, and paper reconstruction |
+| `notebooks/02_dynamic_multiscale_improvement.ipynb` | Static and dynamic multiscale models, validation selection, and main test results |
+| `notebooks/03_multihorizon_evaluation.ipynb` | Three-seed evaluation at horizons 96, 192, 336, and 720 |
+| `notebooks/04_results_and_figures.ipynb` | Final result tables and report figures |
+| `src/ts_project/` | Data preparation, forecasting models, metrics, baselines, and training utilities |
+| `results/dlinear/weather/` | Saved numerical results used by the report |
+| `data/README.md` | Dataset download instructions and checksum |
 
 ## Experiment
 
-- supervised multivariate forecasting;
-- Weather: 52,696 rows, 21 variables, 10-minute sampling;
-- input length 336 and forecast horizon 96;
+- supervised multivariate-to-multivariate forecasting;
+- Weather dataset: 52,696 rows, 21 variables, 10-minute sampling;
+- input length 336 and main forecast horizon 96;
 - chronological 70%/10%/20% train/validation/test split;
-- `StandardScaler` fitted on training observations only;
-- MSE, MAE, and RMSE;
+- standardization fitted on training observations only;
+- MSE and MAE evaluation;
 - daily seasonal-naive baseline with period 144;
-- seeds 2021, 2022, and 2023.
+- paired seeds 2021, 2022, and 2023.
 
 ## Main result
 
@@ -39,8 +38,8 @@ Earlier ETTh1, PatchTST, and rejected improvement experiments are preserved in
 | Static per-variable multiscale DLinear | 64,767 | 0.16739 ± 0.00044 | 0.22910 ± 0.00114 |
 | **Dynamic per-variable multiscale DLinear** | **64,834** | **0.16540 ± 0.00045** | **0.22492 ± 0.00137** |
 
-The dynamic model reduces paired test MSE by approximately 5.29% and MAE by 4.23%, with
-only 130 additional parameters.
+The dynamic model reduces paired test MSE by 5.29% and MAE by 4.23% while
+adding only 130 trainable parameters.
 
 ## Setup
 
@@ -64,25 +63,20 @@ matplotlib 3.11.1
 
 ## Dataset
 
-Download the Weather benchmark and place it at:
+Download `weather.csv` using the links in `data/README.md`, then place it at:
 
 ```text
 data/raw/weather.csv
 ```
 
-The dataset link, expected dimensions, and checksum are in `data/README.md`.
+## Reproduce the results
 
-## Run
+Open the four notebooks in numerical order and select the project `.venv`
+kernel. Notebooks 1–3 train and evaluate the models; notebook 4 reads the saved
+CSV results and recreates the final tables and figures. Completed numerical
+outputs are written under `results/dlinear/weather/`, while generated report
+figures are written under the ignored `outputs/report_figures/` directory.
 
-Open the notebooks in numerical order and select the project `.venv` kernel.
-Notebook 1 trains DLinear with three seeds, notebook 2 trains the static and dynamic multiscale models with
-the same paired seeds, and notebook 3 runs the optional repeated-seed
-multi-horizon experiment. On the project GPU, notebooks 1 and 2 take roughly
-5 and 13 minutes, respectively. All project experiments run directly from the
-notebooks.
-
-Run tests with:
-
-```powershell
-.\.venv\Scripts\python.exe -m pytest -q
-```
+On the project GPU, notebooks 1 and 2 take approximately 5 and 13 minutes,
+respectively. The multi-horizon experiment in notebook 3 takes longer because
+it trains both models at four forecast horizons.

@@ -1,4 +1,0 @@
-model,MSE,MSE_std,MAE,MAE_std
-Original DLinear (local; 3 seeds),0.381133,0.012862,0.405212,0.015507
-FAN-DLinear (K=8; 3 seeds),0.424488,0.007979,0.436627,0.003621
-Paper-reported original DLinear,0.375,,0.399,

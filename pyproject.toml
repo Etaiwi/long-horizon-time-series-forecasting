@@ -12,21 +12,15 @@ dependencies = [
     "matplotlib>=3.9,<4",
     "numpy>=2.0,<3",
     "pandas>=2.2,<3",
-    "pyyaml>=6,<7",
     "scikit-learn>=1.5,<2",
     "torch==2.12.1",
 ]
 
 [project.optional-dependencies]
-dev = [
+notebook = [
     "ipykernel>=6.29,<7",
     "nbconvert>=7.16,<8",
-    "pytest>=8.3,<9",
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.pytest.ini_options]
-pythonpath = ["src"]
-testpaths = ["tests"]

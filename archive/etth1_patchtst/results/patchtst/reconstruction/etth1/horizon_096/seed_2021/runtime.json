@@ -1,6 +1,0 @@
-{
-  "device": "cuda",
-  "training_seconds": 659.6950437000196,
-  "best_epoch": 68,
-  "parameter_count": 81728
-}
